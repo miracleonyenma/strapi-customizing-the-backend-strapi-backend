@@ -1,5 +1,8 @@
 'use strict';
 
+const utils = require("@strapi/utils")
+const {PolicyError} = utils.errors
+
 /**
  * `is-owner` policy.
  */
@@ -20,13 +23,17 @@ module.exports = async (policyContext, config, { strapi }) => {
     populate: ["owner"]
   })
 
-  console.log({
-    order_id: id,
-    order,
-    user_id: user.id
-  });
+  // console.log({
+  //   order_id: id,
+  //   order,
+  //   user_id: user.id
+  // });
 
+  if(order.owner.id === user.id){
+    // Go ahead to excecute
+    return true;
+  }
 
-
-  return false;
+  // throw policy error
+  throw new PolicyError("Thou shall not pass!")
 };
